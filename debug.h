@@ -1,3 +1,5 @@
+#pragma once
+
 #include <iostream>
 #include <errno.h>
 #include <string.h>
