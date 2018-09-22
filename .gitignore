@@ -4,3 +4,5 @@ obj/*
 *.bmp
 *.o
 *.exe
+
+.ycm_extra_conf.py
