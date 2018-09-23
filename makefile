@@ -20,7 +20,7 @@ LD_FLAGS=$(LD_DEBUG_FLAGS)
 
 BMP_OUT=$(DIR_BIN)/bmp.exe
 
-_DEPS = bitmap.h
+_DEPS = bitmap.h image_bytes.h
 DEPS = $(patsubst %,$(DIR_INC)/%,$(_DEPS))
 
 _BMP_OBJS = bmp.o
