@@ -3,6 +3,7 @@ DIR_BIN=$(DIR_PROJECT)/bin
 DIR_OBJ=$(DIR_PROJECT)/obj
 DIR_INC=$(DIR_PROJECT)/inc
 DIR_SRC=$(DIR_PROJECT)/src
+DIR_TEST=$(DIR_PROJECT)/test
 
 CPP_STD_VER=-std=c++17
 CPP_DEBUG_FLAGS=-D__DEBUG__ -g -O0
@@ -38,27 +39,42 @@ $(DIR_OBJ)/%.o: $(DIR_SRC)/%.cpp $(DEPS) | $(DIR_OBJ)
 $(BMP_OUT): $(BMP_OBJS) | $(DIR_BIN)
 	g++ -o $@ $^ $(LD_FLAGS)
 
+################
+## test build ##
+################
+
+all_test: framework test_
+
+framework: $(DIR_TEST)/framework.h $(DIR_TEST)/framework.cpp | $(DIR_TEST)/out
+	g++ -c -o $(DIR_TEST)/out/framework.o $(DIR_TEST)/framework.cpp $(CPP_FLAGS)
+
+test_: $(DIR_TEST)/framework.h $(DIR_TEST)/test.cpp $(DIR_TEST)/out/framework.o | $(DIR_TEST)/out
+	g++ -o $(DIR_TEST)/out/test.exe $(DIR_TEST)/test.cpp $(DIR_TEST)/out/framework.o $(CPP_FLAGS)
+
 ###########
 ## phony ##
 ###########
 
-.PHONY: clean directories
+.PHONY: clean directories all_test
 
 #############
 ## cleanup ##
 #############
 
 clean:
-	rm -f $(DIR_OBJ)/*.o $(BMP_OUT)
+	rm -f $(DIR_OBJ)/*.o $(DIR_BIN)/*.exe $(DIR_TEST)/out/*
 
 ###############################
 ## create output directories ##
 ###############################
 
-directories: $(DIR_BIN) $(DIR_OBJ)
+directories: $(DIR_BIN) $(DIR_OBJ) $(DIR_TEST)/out
 
 $(DIR_BIN):
 	mkdir -p $(DIR_BIN)
 
 $(DIR_OBJ):
 	mkdir -p $(DIR_OBJ)
+
+$(DIR_TEST)/out:
+	mkdir -p $(DIR_TEST)/out

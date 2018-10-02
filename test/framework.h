@@ -1,3 +1,5 @@
+#pragma once
+
 #include <exception>
 #include <vector>
 #include <functional>
@@ -6,50 +8,31 @@
 
 namespace test
 {
-  class TestFunction
+  class test_exception : public std::exception
   {
   public:
-    TestFunction(
-      std::string const& name,
-      std::function<void()> func)
-      : m_name(name)
-      , m_func(func)
-      , m_ran(false)
-      , m_passed(false)
-      , m_error_string()
-    { }
-  
-    void operator()()
-    {
-      m_ran = true;
-      try
-      {
-        m_func();
-      }
-      catch (std::exception e)
-      {
-        m_error_string = e.what();
-        m_passed = false;
-        return;
-      }
-      m_passed = true;
-    }
+    test_exception(std::string const& what = std::string());
 
-    std::string const& name() const
-    {
-      return m_name;
-    }
+    char const* what() const noexcept override;
+
+  private:
+    std::string m_what;
+  };
+
+  class test_function
+  {
+  public:
+    test_function(
+      std::string const& name,
+      std::function<void()> func);
   
-    bool ran() const
-    {
-      return m_ran;
-    }
-  
-    bool passed() const
-    {
-      return m_passed;
-    }
-  
+    void operator()();
+
+    std::string const& name() const;
+    std::string const& error() const;
+    bool ran() const;
+    bool passed() const;
+
   private:
     std::string const m_name;
     std::function<void()> const m_func;
@@ -61,37 +44,29 @@ namespace test
 
   std::ostream& operator<<(
     std::ostream& os,
-    TestFunction const& tf)
-  {
-    os << tf.name() << "\t"
-       << "ran: " << tf.ran() << "\t"
-       << "passed: " << tf.passed();
-    return os;
-  }
+    test_function const& tf);
   
-  class TestSuite
+  class test_suite
   {
   public:
-    void add_test(TestFunction const& test)
-    {
-      m_tests.push_back(test);
-    }
+    test_suite(std::string name);
+
+    void add_test(test_function const& test);
   
     void add_test(
       std::string const& name,
-      std::function<void()> test)
-    {
-      m_tests.emplace_back(name, test);
-    }
+      std::function<void()> test);
   
-    void operator()()
-    {
-      for (auto test : m_tests)
-      {
-      }
-    }
+    void operator()(std::ostream& os = std::cout);
   
   private:
-    std::vector<TestFunction> m_tests;
+    std::vector<test_function> m_tests;
+    std::string const m_name;
   };
+
+  namespace assert
+  {
+    void that(bool condition);
+    void that(bool condition, std::string const& message);
+  }
 }
