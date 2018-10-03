@@ -76,36 +76,50 @@ namespace test
     return os;
   }
   
-  ///// test_suite /////
-  test_suite::test_suite(std::string name)
-    : m_name(name) { }
+  ///// test_group /////
+  test_group::test_group(
+    std::string name,
+    std::function<void()> group_setup /*= std::function<void()>()*/,
+    std::function<void()> group_teardown /*= std::function<void()>()*/,
+    std::function<void()> test_setup /*= std::function<void()>()*/,
+    std::function<void()> test_teardown /*= std::function<void()>()*/)
+    : m_name(name)
+    , m_group_setup(group_setup)
+    , m_group_teardown(group_teardown)
+    , m_test_setup(test_setup)
+    , m_test_teardown(test_teardown)
+  { }
 
-  void test_suite::add_test(test_function const& test)
+  void test_group::add_test(test_function const& test)
   {
     m_tests.push_back(test);
   }
   
-  void test_suite::add_test(
+  void test_group::add_test(
     std::string const& name,
     std::function<void()> test)
   {
     m_tests.emplace_back(name, test);
   }
   
-  void test_suite::operator()(std::ostream& os /*= std::cout*/)
+  void test_group::operator()(std::ostream& os /*= std::cout*/)
   {
     os << "Running Test Suite: "
        << m_name
        << std::endl;
 
+    if (m_group_setup) m_group_setup();
     for (auto test : m_tests)
     {
+      if (m_test_setup) m_test_setup();
       test();
+      if (m_test_teardown) m_test_teardown();
       os << test;
       os << std::endl;
     }
+    if (m_group_teardown) m_group_teardown();
   }
-  ///// test_suite /////
+  ///// test_group /////
 
   namespace assert
   {

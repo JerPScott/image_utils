@@ -46,10 +46,15 @@ namespace test
     std::ostream& os,
     test_function const& tf);
   
-  class test_suite
+  class test_group
   {
   public:
-    test_suite(std::string name);
+    test_group(
+      std::string name,
+      std::function<void()> group_setup = std::function<void()>(),
+      std::function<void()> group_teardown = std::function<void()>(),
+      std::function<void()> test_setup = std::function<void()>(),
+      std::function<void()> test_teardown = std::function<void()>());
 
     void add_test(test_function const& test);
   
@@ -62,6 +67,20 @@ namespace test
   private:
     std::vector<test_function> m_tests;
     std::string const m_name;
+
+    // before test group
+    std::function<void()> const m_group_setup;
+    // after test group
+    std::function<void()> const m_group_teardown;
+    // before each test
+    std::function<void()> const m_test_setup;
+    // after each test
+    std::function<void()> const m_test_teardown;
+  };
+
+  class Itest_suite
+  {
+    virtual void operator()();
   };
 
   namespace assert

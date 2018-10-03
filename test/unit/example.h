@@ -11,18 +11,19 @@ void example_pass()
 }
 
 struct example
+  : public test::Itest_suite
 {
   example()
-    : m_example_suite("example suite")
+    : m_example_group("example group")
   {
-    m_example_suite.add_test("example_fail", example_fail);
-    m_example_suite.add_test("example_pass", example_pass);
+    m_example_group.add_test("example_fail", example_fail);
+    m_example_group.add_test("example_pass", example_pass);
   }
 
-  void operator()()
+  void operator()() override
   {
-    m_example_suite();
+    m_example_group();
   }
 
-  test::test_suite m_example_suite;
+  test::test_group m_example_group;
 };
