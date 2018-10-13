@@ -5,7 +5,18 @@
 
 using pixel = std::array<unsigned char, 3>;
 
-// y rows of w pixels
+namespace pixel_utils
+{
+  inline unsigned char const& get_r(pixel const& p) { return p.at(0); }
+  inline unsigned char const& get_g(pixel const& p) { return p.at(1); }
+  inline unsigned char const& get_b(pixel const& p) { return p.at(2); }
+  
+  inline unsigned char& at_r(pixel& p) { return p.at(0); }
+  inline unsigned char& at_g(pixel& p) { return p.at(1); }
+  inline unsigned char& at_b(pixel& p) { return p.at(2); }
+}
+
+// h rows of w pixels
 template<unsigned int w, unsigned int h>
 struct image_bytes
 {
@@ -13,7 +24,7 @@ struct image_bytes
   using const_ptr = std::shared_ptr<const image_bytes<w, h>>;
 
   static const unsigned int width = w;
-  static const unsigned int height = w;
+  static const unsigned int height = h;
 
   inline pixel const& get(unsigned int x, unsigned int y) const
   {
@@ -59,28 +70,28 @@ struct image_bytes
 
   inline unsigned char get_r(unsigned int x, unsigned int y) const
   {
-    return m_data[y][x][0];
+    return pixel_utils::get_r(m_data[y][x]);
   }
   inline unsigned char get_g(unsigned int x, unsigned int y) const
   {
-    return m_data[y][x][1];
+    return pixel_utils::get_g(m_data[y][x]);
   }
   inline unsigned char get_b(unsigned int x, unsigned int y) const
   {
-    return m_data[y][x][2];
+    return pixel_utils::get_b(m_data[y][x]);
   }
 
   inline unsigned char& at_r(unsigned int x, unsigned int y)
   {
-    return m_data[y][x][0];
+    return pixel_utils::at_r(m_data[y][x]);
   }
   inline unsigned char& at_g(unsigned int x, unsigned int y)
   {
-    return m_data[y][x][1];
+    return pixel_utils::at_g(m_data[y][x]);
   }
   inline unsigned char& at_b(unsigned int x, unsigned int y)
   {
-    return m_data[y][x][2];
+    return pixel_utils::at_b(m_data[y][x]);
   }
 
   std::array<std::array<pixel, w>, h> m_data;
