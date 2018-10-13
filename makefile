@@ -24,6 +24,9 @@ BMP_OUT=$(DIR_BIN)/bmp.exe
 _DEPS = bitmap.h image_bytes.h
 DEPS = $(patsubst %,$(DIR_INC)/%,$(_DEPS))
 
+_UNIT_DEPS = image_bytes_suite.h
+UNIT_DEPS = $(patsubst %,$(DIR_TEST)/unit/%,$(_UNIT_DEPS))
+
 _BMP_OBJS = bmp.o
 BMP_OBJS = $(patsubst %,$(DIR_OBJ)/%,$(_BMP_OBJS))
 
@@ -48,8 +51,8 @@ all_test: framework test_ test_run
 framework: $(DIR_TEST)/framework.h $(DIR_TEST)/framework.cpp | $(DIR_TEST)/out
 	g++ -c -o $(DIR_TEST)/out/framework.o $(DIR_TEST)/framework.cpp $(CPP_FLAGS)
 
-test_: $(DIR_TEST)/framework.h $(DIR_TEST)/test.cpp $(DIR_TEST)/out/framework.o | $(DIR_TEST)/out
-	g++ -o $(DIR_TEST)/out/test.exe $(DIR_TEST)/test.cpp $(DIR_TEST)/out/framework.o $(CPP_FLAGS)
+test_: $(DIR_TEST)/framework.h $(DIR_TEST)/test.cpp $(DIR_TEST)/out/framework.o $(DEPS) $(UNIT_DEPS) | $(DIR_TEST)/out
+	g++ -o $(DIR_TEST)/out/test.exe $(DIR_TEST)/test.cpp $(DIR_TEST)/out/framework.o $(CPP_FLAGS) -I$(DIR_TEST)/unit
 
 test_run: test_
 	$(DIR_TEST)/out/test.exe
