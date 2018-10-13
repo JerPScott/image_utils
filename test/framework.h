@@ -80,7 +80,9 @@ namespace test
 
   class Itest_suite
   {
-    virtual void operator()();
+  protected:
+    virtual void operator()() = 0;
+    virtual ~Itest_suite() { }
   };
 
   namespace assert

@@ -25,5 +25,7 @@ struct example
     m_example_group();
   }
 
+  ~example() { }
+
   test::test_group m_example_group;
 };
