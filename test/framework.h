@@ -62,11 +62,13 @@ namespace test
       std::string const& name,
       std::function<void()> test);
   
-    void operator()(std::ostream& os = std::cout);
+    bool operator()(std::ostream& os = std::cout);
   
   private:
     std::vector<test_function> m_tests;
     std::string const m_name;
+
+    bool m_all_passed;
 
     // before test group
     std::function<void()> const m_group_setup;
@@ -81,7 +83,7 @@ namespace test
   class Itest_suite
   {
   protected:
-    virtual void operator()() = 0;
+    virtual bool operator()() = 0;
     virtual ~Itest_suite() { }
   };
 

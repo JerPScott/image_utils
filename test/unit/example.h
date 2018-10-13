@@ -20,9 +20,9 @@ struct example
     m_example_group.add_test("example_pass", example_pass);
   }
 
-  void operator()() override
+  bool operator()() override
   {
-    m_example_group();
+    return m_example_group();
   }
 
   ~example() { }

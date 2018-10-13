@@ -84,6 +84,7 @@ namespace test
     std::function<void()> test_setup /*= std::function<void()>()*/,
     std::function<void()> test_teardown /*= std::function<void()>()*/)
     : m_name(name)
+    , m_all_passed(true)
     , m_group_setup(group_setup)
     , m_group_teardown(group_teardown)
     , m_test_setup(test_setup)
@@ -102,7 +103,7 @@ namespace test
     m_tests.emplace_back(name, test);
   }
   
-  void test_group::operator()(std::ostream& os /*= std::cout*/)
+  bool test_group::operator()(std::ostream& os /*= std::cout*/)
   {
     os << "Running Test Suite: "
        << m_name
@@ -116,8 +117,10 @@ namespace test
       if (m_test_teardown) m_test_teardown();
       os << test;
       os << std::endl;
+      m_all_passed &= test.passed();
     }
     if (m_group_teardown) m_group_teardown();
+    return m_all_passed;
   }
   ///// test_group /////
 

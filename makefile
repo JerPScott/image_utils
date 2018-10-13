@@ -43,13 +43,16 @@ $(BMP_OUT): $(BMP_OBJS) | $(DIR_BIN)
 ## test build ##
 ################
 
-all_test: framework test_
+all_test: framework test_ test_run
 
 framework: $(DIR_TEST)/framework.h $(DIR_TEST)/framework.cpp | $(DIR_TEST)/out
 	g++ -c -o $(DIR_TEST)/out/framework.o $(DIR_TEST)/framework.cpp $(CPP_FLAGS)
 
 test_: $(DIR_TEST)/framework.h $(DIR_TEST)/test.cpp $(DIR_TEST)/out/framework.o | $(DIR_TEST)/out
 	g++ -o $(DIR_TEST)/out/test.exe $(DIR_TEST)/test.cpp $(DIR_TEST)/out/framework.o $(CPP_FLAGS)
+
+test_run: test_
+	$(DIR_TEST)/out/test.exe
 
 ###########
 ## phony ##
