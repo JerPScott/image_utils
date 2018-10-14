@@ -105,7 +105,7 @@ namespace test
   
   bool test_group::operator()(std::ostream& os /*= std::cout*/)
   {
-    os << "Running Test Suite: "
+    os << "Running Test Group: "
        << m_name
        << std::endl;
 
