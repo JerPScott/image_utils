@@ -58,7 +58,7 @@ struct image_bytes
     
     for (unsigned int x = 0; x < image_width; ++x)
     {
-      for (unsigned int y = 0; y < image_width; ++y)
+      for (unsigned int y = 0; y < image_height; ++y)
       {
         auto curr_x = x + x_start;
         auto curr_y = y + y_start;
