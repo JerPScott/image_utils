@@ -143,6 +143,10 @@ public:
 
 private:
 
+  // for unit tests
+  friend void create_shared_test();
+  friend void create_copy_test();
+
   bitmap(typename image_bytes<w, h>::ptr image)
   {
     m_image = image;
