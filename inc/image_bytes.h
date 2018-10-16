@@ -1,3 +1,5 @@
+#pragma once
+
 #include <memory>
 #include <array>
 
@@ -18,13 +20,22 @@ namespace pixel_utils
 
 // h rows of w pixels
 template<unsigned int w, unsigned int h>
-struct image_bytes
+class image_bytes
 {
+public:
   using ptr = std::shared_ptr<image_bytes<w, h>>;
   using const_ptr = std::shared_ptr<const image_bytes<w, h>>;
 
   static const unsigned int width = w;
   static const unsigned int height = h;
+
+  image_bytes()
+  { }
+
+  image_bytes(pixel const& fill)
+  {
+    set(fill);
+  }
 
   inline pixel const& get(unsigned int x, unsigned int y) const
   {
@@ -94,6 +105,7 @@ struct image_bytes
     return pixel_utils::at_b(m_data[y][x]);
   }
 
+private:
   std::array<std::array<pixel, w>, h> m_data;
 };
 
